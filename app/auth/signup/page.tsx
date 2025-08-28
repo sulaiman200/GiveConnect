@@ -25,7 +25,6 @@ export default function SignUpPage() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
@@ -42,6 +41,8 @@ export default function SignUpPage() {
     }
 
     try {
+      const supabase = createClient()
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -56,7 +57,16 @@ export default function SignUpPage() {
       if (error) throw error
       router.push("/auth/signup-success")
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      console.error("[v0] Signup error:", error)
+      if (error instanceof Error) {
+        if (error.message.includes("Missing Supabase environment variables")) {
+          setError("Authentication service is not configured. Please contact support.")
+        } else {
+          setError(error.message)
+        }
+      } else {
+        setError("An error occurred during signup")
+      }
     } finally {
       setIsLoading(false)
     }
