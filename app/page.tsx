@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Heart, Users, Gift, Search, Plus, MapPin, Calendar, User } from "lucide-react"
 import { PhilanthropistDashboard } from "@/components/philanthropist-dashboard"
 import { BeneficiaryPortal } from "@/components/beneficiary-portal"
+import Link from "next/link"
 
 type UserType = "philanthropist" | "beneficiary" | null
 
@@ -45,6 +46,14 @@ export default function HomePage() {
                 <h1 className="text-xl font-bold text-gray-900">GiveConnect</h1>
                 <p className="text-sm text-gray-600">Connecting hearts, changing lives</p>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button asChild variant="outline">
+                <Link href="/auth/login">Sign In</Link>
+              </Button>
+              <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                <Link href="/auth/signup">Get Started</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -92,11 +101,8 @@ export default function HomePage() {
                     <span>Track distribution progress</span>
                   </div>
                 </div>
-                <Button
-                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => handleLogin("philanthropist", "Demo Philanthropist")}
-                >
-                  Continue as Philanthropist
+                <Button asChild className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
+                  <Link href="/auth/signup">Continue as Philanthropist</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -127,11 +133,8 @@ export default function HomePage() {
                     <span>Submit requests easily</span>
                   </div>
                 </div>
-                <Button
-                  className="w-full mt-6 bg-green-600 hover:bg-green-700"
-                  onClick={() => handleLogin("beneficiary", "Demo Beneficiary")}
-                >
-                  Continue as Beneficiary
+                <Button asChild className="w-full mt-6 bg-green-600 hover:bg-green-700">
+                  <Link href="/auth/signup">Continue as Beneficiary</Link>
                 </Button>
               </CardContent>
             </Card>

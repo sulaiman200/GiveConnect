@@ -11,6 +11,13 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
   Heart,
   Search,
   MapPin,
@@ -22,15 +29,29 @@ import {
   CheckCircle,
   Mail,
   MessageCircle,
+  Settings,
+  User,
+  Trash2,
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
+import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 interface BeneficiaryPortalProps {
   user: string
-  onLogout: () => void
+  onLogout?: () => void
 }
 
 export function BeneficiaryPortal({ user, onLogout }: BeneficiaryPortalProps) {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push("/")
+  }
+
   const { distributions, addRequest } = useAppStore()
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -122,10 +143,34 @@ export function BeneficiaryPortal({ user, onLogout }: BeneficiaryPortalProps) {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">Welcome, {user}</span>
-              <Button variant="outline" size="sm" onClick={onLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <User className="w-4 h-4 mr-2" />
+                    Account
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={onLogout || handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/auth/delete-account" className="text-red-600">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Account
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
